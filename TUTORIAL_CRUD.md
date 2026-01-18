@@ -24,7 +24,8 @@ Kita membutuhkan tabel untuk menyimpan data. Kita akan membuat Model `Post` seka
        Schema::create('posts', function (Blueprint $table) {
            $table->id();
            $table->string('title'); // Judul artikel
-           $table->text('content'); // Isi artikel
+           $table->text('description'); // Isi artikel
+           $table->string('status'); // Status artikel
            $table->timestamps();
        });
    }
@@ -49,7 +50,8 @@ Kita membutuhkan tabel untuk menyimpan data. Kita akan membuat Model `Post` seka
        // Izinkan kolom ini diisi secara massal
        protected $fillable = [
            'title',
-           'content',
+           'description',
+           'status',
        ];
    }
    ```
@@ -96,7 +98,8 @@ Kita akan membuat Controller menggunakan opsi `--resource` agar Laravel otomatis
            // 1. Validasi
            $request->validate([
                'title'   => 'required|min:5',
-               'content' => 'required|min:10'
+               'content' => 'required|min:10',
+               'status'  => 'required|min:7'
            ]);
 
            // 2. Simpan ke Database (Mass Assignment)
@@ -119,7 +122,8 @@ Kita akan membuat Controller menggunakan opsi `--resource` agar Laravel otomatis
            // 1. Validasi
            $request->validate([
                'title'   => 'required|min:5',
-               'content' => 'required|min:10'
+               'content' => 'required|min:10',
+               'status'  => 'required|min:7'
            ]);
 
            // 2. Update Data
@@ -172,7 +176,7 @@ Buat file `resources/views/layout.blade.php`:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dumbways Laravel CRUD</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
@@ -221,7 +225,7 @@ Buat file `resources/views/posts/index.blade.php`:
                     <p class="text-gray-900 whitespace-no-wrap font-bold">{{ $post->title }}</p>
                 </td>
                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{ Str::limit($post->content, 50) }}</p>
+                    <p class="text-gray-900 whitespace-no-wrap">{{ Str::limit($post->description, 50) }}</p>
                 </td>
                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
@@ -275,14 +279,14 @@ Buat file `resources/views/posts/create.blade.php`:
             </div>
 
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="content">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
                     Konten
                 </label>
-                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('content') border-red-500 @enderror" 
-                    id="content" name="content" rows="5" placeholder="Isi artikel...">{{ old('content') }}</textarea>
+                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('description') border-red-500 @enderror" 
+                    id="description" name="description" rows="5" placeholder="Isi artikel...">{{ old('description') }}</textarea>
                 
                 {{-- Error Message --}}
-                @error('content')
+                @error('description')
                     <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
                 @enderror
             </div>
@@ -333,10 +337,10 @@ Buat file `resources/views/posts/edit.blade.php`:
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="content">
                     Konten
                 </label>
-                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('content') border-red-500 @enderror" 
-                    id="content" name="content" rows="5">{{ old('content', $post->content) }}</textarea>
+                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('description') border-red-500 @enderror" 
+                    id="description" name="description" rows="5">{{ old('description', $post->description) }}</textarea>
                 
-                @error('content')
+                @error('description')
                     <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
                 @enderror
             </div>
