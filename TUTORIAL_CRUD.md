@@ -97,17 +97,16 @@ Kita akan membuat Controller menggunakan opsi `--resource` agar Laravel otomatis
        {
            // 1. Validasi
            $request->validate([
-               'title'   => 'required|min:5',
-               'content' => 'required|min:10',
-               'status'  => 'required|min:7'
+               'title'       => 'required|min:5',
+               'description' => 'required|min:10',
+               'status'      => 'required|min:7'
            ]);
 
            // 2. Simpan ke Database (Mass Assignment)
            Post::create($request->all());
 
            // 3. Redirect dengan Flash Message
-           return redirect()->route('posts.index')
-                            ->with('success', 'Data berhasil disimpan!');
+           return redirect()->route('posts.index')->with('success', 'Data berhasil disimpan!');
        }
 
        // FORM EDIT DATA (EDIT)
@@ -121,17 +120,16 @@ Kita akan membuat Controller menggunakan opsi `--resource` agar Laravel otomatis
        {
            // 1. Validasi
            $request->validate([
-               'title'   => 'required|min:5',
-               'content' => 'required|min:10',
-               'status'  => 'required|min:7'
+               'title'       => 'required|min:5',
+               'description' => 'required|min:10',
+               'status'      => 'required|min:7'
            ]);
 
            // 2. Update Data
            $post->update($request->all());
 
            // 3. Redirect
-           return redirect()->route('posts.index')
-                            ->with('success', 'Data berhasil diperbarui!');
+           return redirect()->route('posts.index')->with('success', 'Data berhasil diperbarui!');
        }
 
        // HAPUS DATA (DESTROY)
@@ -139,8 +137,7 @@ Kita akan membuat Controller menggunakan opsi `--resource` agar Laravel otomatis
        {
            $post->delete();
 
-           return redirect()->route('posts.index')
-                            ->with('success', 'Data berhasil dihapus!');
+           return redirect()->route('posts.index')->with('success', 'Data berhasil dihapus!');
        }
    }
    ```
@@ -278,9 +275,24 @@ Buat file `resources/views/posts/create.blade.php`:
                 @enderror
             </div>
 
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                    Status
+                </label>
+                <select name="status" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
+                </select>
+                
+                {{-- Error Message --}}
+                @error('status')
+                    <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="mb-6">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-                    Konten
+                    Deskripsi
                 </label>
                 <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('description') border-red-500 @enderror" 
                     id="description" name="description" rows="5" placeholder="Isi artikel...">{{ old('description') }}</textarea>
@@ -333,9 +345,24 @@ Buat file `resources/views/posts/edit.blade.php`:
                 @enderror
             </div>
 
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                    Status
+                </label>
+                <select name="status" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="pending" {{ old('status', $post->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="published" {{ old('status', $post->status) == 'published' ? 'selected' : '' }}>Published</option>
+                </select>
+                
+                {{-- Error Message --}}
+                @error('status')
+                    <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="mb-6">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="content">
-                    Konten
+                Deskripsi
                 </label>
                 <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('description') border-red-500 @enderror" 
                     id="description" name="description" rows="5">{{ old('description', $post->description) }}</textarea>
