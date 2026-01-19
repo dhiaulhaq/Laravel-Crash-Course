@@ -38,6 +38,8 @@ Kita membutuhkan tabel untuk menyimpan data. Kita akan membuat Model `Post` seka
 
 4. Buka file Model `app/Models/Post.php` dan tambahkan `$fillable` agar kolom bisa diisi (*Mass Assignment*):
    ```php
+   <?php
+   
    namespace App\Models;
 
    use Illuminate\Database\Eloquent\Factories\HasFactory;
